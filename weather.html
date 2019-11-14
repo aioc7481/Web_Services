@@ -1,0 +1,304 @@
+<!-- Home Page -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Weather Information</title>
+    <!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<style>
+		#thermometer_inner { width: 95%; height: 20%; margin:2.5%; background: red; position:absolute; bottom:0;}
+		#thermometer_outer {height:400px; position:relative;}
+		#temp_today { color:white; text-align:center; position:relative; top:50%; }
+	</style>
+  </head>
+  <body>
+  	<div class="container">
+		<br>
+		<h1 style="text-align:center">Weather Forecast</h1>
+		<hr>
+		<div class="row">
+			<div class="col-4">
+				<div class="card" >
+					<div id="thermometer_outer">
+						<div id="thermometer_inner"><p id="temp_today" class="h3"> 0 F</p></div>
+					</div>
+					<div class="card-body">
+					    <h5 class="text-center">Thermometer</h5>
+					</div>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="card" style="height:100%;">
+					<div class="my-auto">
+						<!-- source for images: https://www.iconfinder.com/iconsets/weather-line-19 -->
+						<img id="image_today" class="img-fluid" src="img/clear-day.png" alt="Today's Weather Icon">
+						<p id="icon_today" class="h3" style="text-align:center">Icon</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="card " style="height:100%;">
+					<div class="my-auto">
+						<p class="h3" style="padding-left:15px;">Precipitation: <span id="precip_today">10%</span><br>
+					    Humidity: <span id="humidity_today">80%</span><br>
+					    Wind Speed: <span id="wind_today">5</span> mph<br>
+					    Summary: <span id="summary_today">Summary Info</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<h2 class="h1" style="text-align:center;">6 Day Forecast</h2>
+		<hr>
+		<div class="row" id="6_day_forecast">
+			
+		</div>
+		<br>
+	</div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+	<script>
+		$(document).ready(function() {
+			var url ='https://api.darksky.net/forecast/4a64caaba2ea4852646d8290b89c64b7/37.8267,-122.4233'; //Place your DarkSky API Call Here 
+			$.ajax({url:url, dataType:"jsonp"}).then(function(data) {
+				console.log(data);
+				console.log("Current Temp: " + data.currently.apparentTemperature);
+				console.log("Tomorrow's High: " + data.daily.data[1].apparentTemperatureHigh);
+				var unix_time = data.currently.time;//Retrieve the current timestamp
+				var javascript_time = new Date(unix_time * 1000);//Convert the unix time stamp to javascript
+				console.log(javascript_time);
+				console.log(javascript_time.getDay());
+				var photop = data.minutely.icon;
+				var finalphoto = "img/" + photop + ".png";
+				//console.log(finalphoto);
+				image_today.src = finalphoto;
+				document.getElementById("icon_today").innerHTML = photop;
+				document.getElementById("temp_today").innerHTML = data.currently.apparentTemperature;
+				var hi = data.currently.apparentTemperature + "%";
+				document.getElementById("thermometer_inner").style.height = hi;
+				document.getElementById("summary_today").innerHTML = data.currently.summary;
+				document.getElementById("wind_today").innerHTML = data.currently.windSpeed;
+				document.getElementById("humidity_today").innerHTML = data.currently.humidity + "%";
+				document.getElementById("precip_today").innerHTML = data.currently.precipProbability + "%";
+				//wind_today
+				//summary_today
+				//humidity_today
+				var day1 = data.daily.data[1].icon;
+				var day2 = data.daily.data[2].icon;
+				var day3 = data.daily.data[3].icon;
+				var day4 = data.daily.data[4].icon;
+				var day5 = data.daily.data[5].icon;
+				var day6 = data.daily.data[6].icon;
+				var finalphoto1 = "img/" + day1 + ".png";
+				var finalphoto2 = "img/" + day2 + ".png";
+				var finalphoto3 = "img/" + day3 + ".png";
+				var finalphoto4 = "img/" + day4 + ".png";
+				var finalphoto5 = "img/" + day5 + ".png";
+				var finalphoto6 = "img/" + day6 + ".png";
+				//console.log(finalphoto);
+				im0.src = finalphoto1;
+				im1.src = finalphoto2;
+				im2.src = finalphoto3;
+				im3.src = finalphoto4;
+				im4.src = finalphoto5;
+				im5.src = finalphoto6;
+				document.getElementById("hi1").innerHTML = "High: " + data.daily.data[1].apparentTemperatureHigh;
+				document.getElementById("hi2").innerHTML = "High: " + data.daily.data[2].apparentTemperatureHigh;
+				document.getElementById("hi3").innerHTML = "High: " + data.daily.data[3].apparentTemperatureHigh;
+				document.getElementById("hi4").innerHTML = "High: " + data.daily.data[4].apparentTemperatureHigh;
+				document.getElementById("hi5").innerHTML = "High: " + data.daily.data[5].apparentTemperatureHigh;
+				document.getElementById("hi6").innerHTML = "High: " + data.daily.data[6].apparentTemperatureHigh;
+
+				document.getElementById("lo1").innerHTML = "Low: " + data.daily.data[1].apparentTemperatureLow;
+				document.getElementById("lo2").innerHTML = "Low: " + data.daily.data[2].apparentTemperatureLow;
+				document.getElementById("lo3").innerHTML = "Low: " + data.daily.data[3].apparentTemperatureLow;
+				document.getElementById("lo4").innerHTML = "Low: " + data.daily.data[4].apparentTemperatureLow;
+				document.getElementById("lo5").innerHTML = "Low: " + data.daily.data[5].apparentTemperatureLow;
+				document.getElementById("lo6").innerHTML = "Low: " + data.daily.data[6].apparentTemperatureLow;
+				var dayOW = javascript_time.getDay();
+				
+				
+				/* 
+					Read the current weather information from the data point values [https://darksky.net/dev/docs#data-point] to 
+					update the webpage for today's weather:
+					1. image_today : This should display an image for today's weather.  
+									 This will use the icon data point and pair it with an appropriate .png file (located in the img directory.)
+
+					2. icon_today : This will be set to display the current icon value.
+
+					3. temp_today : This will be updated to match the current temperature.
+
+					4. thermometer_inner : Modify the height of the thermometer to match the current temperature. This means if the 
+										   current temperature is 32 F, then the thermometer will have a height of 32%.  Please note, 
+										   this thermometer has a lower boundary of 0 and upper boundary of 100.  
+
+					5. precip_today : This will be updated to match the current probability for precipitation.(make sure this is 
+									  listed as a percentage %)
+
+					6. humidity_today : This will be updated to match the current humidity percentage (make sure this is listed as a 
+										percentage %)
+
+					7. wind_today : This will be updated to match the current wind speed.
+
+					8. summary_today: This will be updated to match the current summary for the day's weather.
+
+				*/
+				
+
+				/* Process the daily forecast for the next 6 days */
+				/*
+					For the next 6 days you'll need to add a new card listing:
+						1. The image icon for the day's weather
+						2. The temperature high
+						3. The temperature low
+
+					Each card should use the following format:
+					<div class="col-2">
+						<div class="card">
+							<img class="card-img-top" src="<!-- List Icon for the Day's Weather -->" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title"><!-- List Day of the Week Here --></h5>
+								<p class="card-text">High:<!--List Temperature High --> <br> 
+									Low: <!-- List Temperature Low --></p>
+							</div>
+						</div>
+					</div>
+
+					<Hint/Note> - Make sure to use string concatenation to add the html code for the daily weather cards.  This should
+					be set to the innerHTML for the 6_day_forecast.
+
+				*/
+				
+
+				var week_names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; //This is a helper array to help convert the day of the week [0-7] to a named value [Sunday - Saturday]
+				if (dayOW == 0){
+					document.getElementById("day1").innerHTML = week_names[1];
+					document.getElementById("day2").innerHTML = week_names[2];
+					document.getElementById("day3").innerHTML = week_names[3];
+					document.getElementById("day4").innerHTML = week_names[4];
+					document.getElementById("day5").innerHTML = week_names[5];
+					document.getElementById("day6").innerHTML = week_names[6];
+				}
+				else if (dayOW == 1) {
+					document.getElementById("day1").innerHTML = week_names[2];
+					document.getElementById("day2").innerHTML = week_names[3];
+					document.getElementById("day3").innerHTML = week_names[4];
+					document.getElementById("day4").innerHTML = week_names[5];
+					document.getElementById("day5").innerHTML = week_names[6];
+					document.getElementById("day6").innerHTML = week_names[0];
+				}
+				else if (dayOW == 2) {
+					document.getElementById("day1").innerHTML = week_names[3];
+					document.getElementById("day2").innerHTML = week_names[4];
+					document.getElementById("day3").innerHTML = week_names[5];
+					document.getElementById("day4").innerHTML = week_names[6];
+					document.getElementById("day5").innerHTML = week_names[0];
+					document.getElementById("day6").innerHTML = week_names[1];
+				}
+				else if (dayOW == 3) {
+					document.getElementById("day1").innerHTML = week_names[4];
+					document.getElementById("day2").innerHTML = week_names[5];
+					document.getElementById("day3").innerHTML = week_names[6];
+					document.getElementById("day4").innerHTML = week_names[0];
+					document.getElementById("day5").innerHTML = week_names[1];
+					document.getElementById("day6").innerHTML = week_names[2];
+				}
+				else if (dayOW == 4) {
+					document.getElementById("day1").innerHTML = week_names[5];
+					document.getElementById("day2").innerHTML = week_names[6];
+					document.getElementById("day3").innerHTML = week_names[0];
+					document.getElementById("day4").innerHTML = week_names[1];
+					document.getElementById("day5").innerHTML = week_names[2];
+					document.getElementById("day6").innerHTML = week_names[3];
+				}
+				else if (dayOW == 5) {
+					document.getElementById("day1").innerHTML = week_names[6];
+					document.getElementById("day2").innerHTML = week_names[0];
+					document.getElementById("day3").innerHTML = week_names[1];
+					document.getElementById("day4").innerHTML = week_names[2];
+					document.getElementById("day5").innerHTML = week_names[3];
+					document.getElementById("day6").innerHTML = week_names[4];
+				}
+				else if (dayOW == 6) {
+					document.getElementById("day1").innerHTML = week_names[0];
+					document.getElementById("day2").innerHTML = week_names[1];
+					document.getElementById("day3").innerHTML = week_names[2];
+					document.getElementById("day4").innerHTML = week_names[3];
+					document.getElementById("day5").innerHTML = week_names[4];
+					document.getElementById("day6").innerHTML = week_names[5];
+				}
+			})
+		})
+ 	</script>
+ 	<div style="display: flex; flex-direction: row; justify-content: space-between;">
+ 		<div class="col-2">
+						<div class="card">
+
+							<img class="card-img-top" id="im0" src="<!-- List Icon for the Day's Weather -->" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title" id="day1"><!-- List Day of the Week Here --></h5>
+								<p class="card-text" id="hi1">High:<!--List Temperature High --> </p> <p id="lo1">
+									Low: <!-- List Temperature Low --></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-2">
+					
+						<div class="card">
+							<img class="card-img-top" id="im1" src="<!-- List Icon for the Day's Weather -->" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title" id="day2"><!-- List Day of the Week Here --></h5>
+								<p class="card-text" id="hi2">High:<!--List Temperature High --> </p> <p id="lo2">
+									Low: <!-- List Temperature Low --></p>
+							</div>
+						</div>
+					
+					</div>
+					<div class="col-2">
+						<div class="card">
+							<img class="card-img-top" id="im2" src="<!-- List Icon for the Day's Weather -->" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title" id="day3"><!-- List Day of the Week Here --></h5>
+								<p class="card-text" id="hi3">High:<!--List Temperature High --> </p> <p id="lo3">
+									Low: <!-- List Temperature Low --></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-2">
+						<div class="card">
+							<img class="card-img-top" id="im3" src="<!-- List Icon for the Day's Weather -->" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title" id="day4"><!-- List Day of the Week Here --></h5>
+								<p class="card-text" id="hi4">High:<!--List Temperature High --> </p> <p id="lo4">
+									Low: <!-- List Temperature Low --></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-2">
+						<div class="card">
+							<img class="card-img-top" id="im4" src="<!-- List Icon for the Day's Weather -->" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title" id="day5"><!-- List Day of the Week Here --></h5>
+								<p class="card-text" id="hi5">High:<!--List Temperature High --> </p> <p id="lo5">
+									Low: <!-- List Temperature Low --></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-2">
+						<div class="card">
+							<img class="card-img-top" id="im5" src="<!-- List Icon for the Day's Weather -->" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title" id="day6"><!-- List Day of the Week Here --></h5>
+								<p class="card-text" id="hi6">High:<!--List Temperature High --> </p> <p id="lo6">
+									Low: <!-- List Temperature Low --></p>
+							</div>
+						</div>
+					</div>
+					</div>
+					
+</body>
+</html>
